@@ -19,7 +19,7 @@ export default function HomeClient({ featured, popular }) {
             <span className="bg-gradient-to-r from-primary-500 via-primary-600 to-secondary-500 bg-clip-text text-transparent">Discover & Share</span>
             <br /><span className="text-slate-800 dark:text-white">Amazing Recipes</span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8">Join our community! Create, share, and explore thousands of delicious recipes.</p>
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8">RecipeHub is a platform where food enthusiasts can create, share, discover, and manage recipes. <br /> Join our community! Create, share, and explore thousands of delicious recipes.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/recipes" className="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-8 py-4 rounded-xl font-bold text-lg inline-flex items-center gap-2 hover:from-primary-600 hover:to-primary-700 shadow-lg">
               <Search className="w-5 h-5" />Explore Recipes<ArrowRight className="w-5 h-5" /></Link>
