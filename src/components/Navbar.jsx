@@ -42,7 +42,7 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center gap-3">
               <Link href="/login" className="text-sm font-medium text-slate-600 hover:text-primary-500">Login</Link>
-              <Link href="/register"><Button size="sm" color="primary">Sign Up</Button></Link>
+              <Link href="/register"><Button size="sm" color="primary"> Register </Button></Link>
             </div>
           )}
         </ul>
@@ -58,7 +58,7 @@ export default function Navbar() {
               <li><button onClick={() => authClient.signOut()} className="text-red-500 text-left">Logout</button></li></>
             ) : (
               <><li><Link href="/login" onClick={() => setMenuOpen(false)}>Login</Link></li>
-              <li><Link href="/register" onClick={() => setMenuOpen(false)}>Sign Up</Link></li></>
+              <li><Link href="/register" onClick={() => setMenuOpen(false)}>Register</Link></li></>
             )}
           </ul>
         </div>
