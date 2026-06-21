@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { UtensilsCrossed, Heart, ThumbsUp, Crown, ArrowRight, User as UserIcon } from "lucide-react";
-// import { createCheckoutSession } from "@/lib/action/payments";
+import { createCheckoutSession } from "@/lib/action/payments";
 
 export default function UserDashboardClient({ user, stats }) {
   const handlePremium = async () => {
