@@ -21,9 +21,16 @@ export default function RecipeDetailClient({ recipe, user }) {
     checkFavorite();
   }, []);
 
+  const getToken = async () => {
+  const res = await fetch("/api/auth/token", { credentials: "include" });
+  const data = await res.json();
+  return data?.token || null;
+};
+
   const checkFavorite = async () => {
     try {
       const token = await getToken();
+      if (!token) return;
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
         headers: { authorization: `Bearer ${token}` },
       });
@@ -34,22 +41,26 @@ export default function RecipeDetailClient({ recipe, user }) {
     } catch {}
   };
 
-  const getToken = async () => {
-    const { data } = await fetch("/api/auth/get-session", { credentials: "include" }).then(r => r.json());
-    return data?.session?.token || null;
-  };
-
   const handleLike = async () => {
     if (!user) return toast.error("Login to like");
     const token = await getToken();
-    if (!token) return;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipe._id}/like`, {
-      method: "POST",
-      headers: { authorization: `Bearer ${token}` },
-    });
-    const d = await res.json();
-    setLiked(d.liked);
-    setLikes(d.likesCount);
+    if (!token) return toast.error("Session expired, please login again");
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipe._id}/like`, {
+        method: "POST",
+        headers: { authorization: `Bearer ${token}` },
+      });
+      const d = await res.json();
+      if (d.likesCount !== undefined) {
+        setLiked(d.liked);
+        setLikes(d.likesCount);
+        toast.success(d.liked ? "Liked!" : "Unliked!");
+      } else {
+        toast.error(d.msg || "Failed to like");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    }
   };
 
   const handleFavorite = async () => {
@@ -69,13 +80,19 @@ export default function RecipeDetailClient({ recipe, user }) {
     if (!user) return toast.error("Login to purchase");
     setPurchasing(true);
     const token = await getToken();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/create-checkout-session`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
-      body: JSON.stringify({ recipeId: recipe._id }),
-    });
-    const d = await res.json();
-    if (d.url) window.location.href = d.url;
+    if (!token) { setPurchasing(false); return toast.error("Session expired, please login again"); }
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/create-checkout-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", authorization: `Bearer ${token}` },
+        body: JSON.stringify({ recipeId: recipe._id }),
+      });
+      const d = await res.json();
+      if (d.url) window.location.href = d.url;
+      else toast.error(d.error || "Failed to create checkout");
+    } catch {
+      toast.error("Something went wrong");
+    }
     setPurchasing(false);
   };
 
