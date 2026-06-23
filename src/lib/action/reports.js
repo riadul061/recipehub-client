@@ -1,5 +1,5 @@
 "use server";
-// import { getTokenServer } from "../getTokenServer";
+import { getTokenServer } from "../getTokenServer";
 const baseURL = process.env.NEXT_PUBLIC_SERVER_URL;
 export const submitReport = async (data) => {
   const token = await getTokenServer();
